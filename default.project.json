@@ -1,0 +1,9 @@
+{
+    "emitLegacyScripts": false,
+
+    "name":"SONORphys",
+
+    "tree":{
+        "$path": "src"
+    }
+}
