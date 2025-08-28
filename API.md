@@ -53,7 +53,7 @@ Meta: {
 	|"Heartbeat"
 },
 
-EnableDebug: {
+EnableDebug: { --OPENS WITH: Alt+C
 	EnableRays: { ("Velocity"|"Moving"|"RootAxis")? }|boolean, --[[
 		Default: { "Velocity", "RootAxis" }
 		Desc: Decides which debug rays are enabled, if set to 'false' no debug ray will be shown
@@ -112,27 +112,51 @@ Movement: {
 		Default: 54
 		Desc: Used as the maximum speed in the speedometer
 	]]
-	BaseTurnSpeed: number, --[[ Default: 16 ]]
+	BaseTurnSpeed: number, --[[
+		Default: 16
+		Desc: Angular momentum (spinning)
+	]]
 
 	CanJump: boolean, --[[ Default: true ]]
 	MaxJumps: number, --[[ Default: 1 ]]
-	JumpPower: number|"HUMANOID", --[[ Default: "HUMANOID" ]]
-	JumpDebounceTime: number, --[[ Default: 0.08 ]]
+	JumpPower: number|"HUMANOID", --[[
+		Default: "HUMANOID"
+		Desc: if "HUMANOID", humanoid.JumpPower is used instead
+	]]
+	JumpDebounceTime: number, --[[
+		Default: 0.08
+		Desc: Can't be changed after assigment, minimum wait time between each performed jump
+	]]
 	FallingOffLedgesConsumesAJump: boolean, --[[ Default: true ]]
 
 	SlopeFrictionEnabled: boolean, --[[ Default: true ]]
-	FrictionTolerance: number, --[[ Default: 0.9 ]]
+	FrictionTolerance: number, --[[
+		Default: 0.9
+		Desc: Value between -1..1, Friction stays still stays 2 even if the surface is slightly tilted (if -1, friction never applies)
+	]]
 	MinimumFriction: number, --[[ Default: 0 ]]
-	FrictionAngleFactor: number, --[[ Default: 1 ]]
+	FrictionAngleFactor: number, --[[
+		Default: 1
+		Desc: If the number is bigger than 1, max angle increases. The opposite, max angle lowers, BUT this doesn't offer the same behaviour as MaxAngle
+	]]
 	FrictionRecoveryRate: number, --[[ Default: 8 ]]
 	FrictionLossRate: number, --[[ Default: 12 ]]
 
 	MaxAngle: number, --[[ Default: 180 ]]
 
-	UseHumanoidWalkspeed: boolean, --[[ Default: false ]]
-	UseSimpleSpeedometer: boolean, --[[ Default: false ]]
+	UseHumanoidWalkspeed: boolean, --[[
+		Default: false
+		Desc: overrides UseSimpleMovement, also disables speedometer (speedometer state also wont be updated), enable for custom speed behaviour,
+	]]
+	UseSimpleSpeedometer: boolean, --[[
+		Default: false
+		Desc: disables speedometer, 'BaseMoveSpeed' will be used
+	]]
 
-	UpDirectionIsAlwaysAligned: boolean, --[[ Default: false ]]
+	UpDirectionIsAlwaysAligned: boolean, --[[
+		Default: false
+		Desc: aligned as with the yAxis <0, 1, 0>
+	]]
 	UpDirectionLerpFactor: number, --[[ Default: 10 ]]
 	UseMovingDirectionForFacingDirection: boolean, --[[ Default: false ]]
 
@@ -141,13 +165,28 @@ Movement: {
 	AccelerationRate: number, --[[ Default: 0.24 ]]
 	DecelerationRate: number, --[[ Default: 0.8 ]]
 
-	AccelerationUpAngleTolerance: "COPY"|number, --[[ Default: "COPY" ]]
+	AccelerationUpAngleTolerance: "COPY"|number, --[[
+		Default: "COPY"
+		Desc: the value "COPY" makes this use the friction tolerance value, value between -1..1
+	]]
 	AirborneAccelerationFactor: number, --[[ Default: 0.5 ]]
-	DecelerationSharpTurnFactor: number, --[[ Default: 1.6 ]]
-	SpeedOvershootCorrectionFactor: number, --[[ Default: 5 ]]
-	SpeedRecoveryAfterSharpTurn: number, --[[ Default: 0.8 ]]
+	DecelerationSharpTurnFactor: number, --[[
+		Default: 1.6
+		Desc: used for faster decelerating while skidding, multiplied by the deceleration rate
+	]]
+	SpeedOvershootCorrectionFactor: number, --[[
+		Default: 5
+		Desc: affects lerping back to max speed when the speed goes above max speed
+	]]
+	SpeedRecoveryAfterSharpTurn: number, --[[
+		Default: 0.8
+		Desc: how much of the speed is kept from the previous acceleration state after skidding
+	]]
 
-	MaxSustainedSkidTime: number, --[[ Default: 0.08 ]]
+	MaxSustainedSkidTime: number, --[[
+		Default: 0.08
+		Desc: the more time, the more skid stop is delayed
+	]]
 },
 
 GroundSensor: {

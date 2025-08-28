@@ -114,7 +114,9 @@ function controller.init(): typeof(controller)
 
 	--Resume waiting threads
 	for i, v in ipairs(waitingThreads) do
-		task.spawn(v, controller)
+		if coroutine.status(v) == "suspended" then
+			task.spawn(v, controller)
+		end
 	end
 	table.clear(waitingThreads)
 	

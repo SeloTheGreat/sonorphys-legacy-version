@@ -1,5 +1,4 @@
 local jumpAction = require("./jumpAction")
-local groundSensor = require("./groundSensor")
 local types = require("../types")
 
 local S_FREEFALL = Enum.HumanoidStateType.Freefall
