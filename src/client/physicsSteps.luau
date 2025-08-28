@@ -70,8 +70,11 @@ physics.FrictionTolerance = config.FrictionTolerance
 	
 	--Get facing direction
 	local facingDir = (moving ~= Vector3.zero)
-		and (isGrounded and alignWithAxis(moving, upDir, root.CFrame.LookVector) or moving) --((isGrounded and not physics.UseMovingDirForFacing) and root.AssemblyLinearVelocity.Unit or moving)
-		or root.CFrame.LookVector
+		and (
+			if isGrounded then
+			(if physics.UseMovingDirForFacing then alignWithAxis(moving, upDir, root.CFrame.LookVector) else root.AssemblyLinearVelocity.Unit)
+			else moving
+		) or root.CFrame.LookVector
 	
 	--Lowers friction if the player is not fast enough for a slope
 	local friction = 2
