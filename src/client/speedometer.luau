@@ -28,15 +28,6 @@ local function snapVectorOnY(normal: Vector3): Vector3
 	return normal:Dot(Vector3.yAxis) > 0 and Vector3.yAxis or -Vector3.yAxis
 end
 
---shifts the table forward
-local function insertAt(t: {any}, v: any, pos: number)
-	local clone = table.clone(t) --idk about cloning
-	for i = pos, #t do
-		t[i+1] = clone[i]
-	end
-	t[pos] = v
-end
-
 local speedometer = {}
 
 speedometer.MaxSpeed = 1
@@ -308,7 +299,7 @@ function speedometer.setMach(name: string, value: number?)
 			v.name = name
 			return
 		elseif value < v[2] then
-			insertAt(speedometer.SpeedRanges, {name, value}, i)
+			table.insert(speedometer.SpeedRanges, i, {name, value})
 			return
 		end
 	end

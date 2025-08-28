@@ -112,6 +112,13 @@ if config.EnableDebug then
 		function Gizmo:DrawRay(Start, Direction, Color, ID)
 			return Gizmo:DrawArrow(Start, Start + Direction, Color, ID)
 		end
+		
+		function Gizmo:Clear()
+			for i, v in ActiveGizmos do
+				v:Destroy()
+			end
+			table.clear(ActiveGizmos)
+		end
 	end
 	
 	local screen = Instance.new("ScreenGui")
@@ -231,6 +238,7 @@ if config.EnableDebug then
 			if client.PostUpdate:get(name) then
 				list.Visible = false
 				client.PostUpdate:remove(name)
+				Gizmo:Clear()
 			else
 				client.PostUpdate:add(iter, name)
 				list.Visible = true

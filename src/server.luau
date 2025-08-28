@@ -16,9 +16,9 @@ end
 local function getSearchDistance(dist: string|number, humanoid: Humanoid): number	
 	if type(dist) == "string" then
 		if dist:sub(1, 1) == "+" then
-			return getHipHeight(humanoid) + tonumber(dist:sub(2, -1))
+			return getHipHeight(humanoid) + tonumber(dist:sub(2, -1))::number
 		else
-			return tonumber(dist)
+			return tonumber(dist)::number
 		end
 	else
 		return dist

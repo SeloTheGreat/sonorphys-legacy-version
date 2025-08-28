@@ -115,7 +115,7 @@ conf.default = {
 
 		IgnoredInstanceDescendants = {},
 		CollisionGroup = "Default",
-		SnapsToGroundDistance = 0.5,
+		SnapsToGroundDistance = 0.5
 	},
 
 	GroundController = {
@@ -222,7 +222,7 @@ export type SONORphysConfiguration = {
 
 		IgnoredInstanceDescendants: { Instance? },
 		CollisionGroup: "Default"|string,
-		SnapsToGroundDistance: number,
+		SnapsToGroundDistance: number
 	},
 
 	GroundController: {

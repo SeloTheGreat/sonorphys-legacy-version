@@ -3,13 +3,14 @@ local types = require("../types")
 
 assert(config.SnapsToGroundDistance >= 0, "CharacterController configuration: Movement.SnapsToGroundDistance needs to be either 0 or more")
 
-local function defaultParams(...: Instance?)
+local function defaultParams(...: Instance?): RaycastParams
 	local p = RaycastParams.new()
 	p.FilterType = Enum.RaycastFilterType.Exclude
 	p.IgnoreWater = true
 	p.RespectCanCollide = true
 	p.FilterDescendantsInstances = {...}
 	p.CollisionGroup = config.CollisionGroup or "Default"
+	
 	return p
 end
 
@@ -25,8 +26,8 @@ function sensormodule.update(manager: types.ControllerManagerHierarchy, humanoid
 
 	local dir = (-manager.UpDirection) * (sensor.SearchDistance + config.SnapsToGroundDistance)
 	local result =
-		workspace:Raycast(root.Position, dir, sensormodule.Params) --using raycast for now cuz it saves performance
-		--workspace:Blockcast(root.CFrame, Vector3.new(0.5, 1, 0.5), dir, sensormodule.Params)
+		--workspace:Raycast(root.Position, dir, sensormodule.Params) --using raycast for now cuz it saves performance
+		workspace:Blockcast(root.CFrame, Vector3.new(0.5, 1, 0.5), dir, sensormodule.Params)
 
 	if result and humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
 		local normal = result.Normal

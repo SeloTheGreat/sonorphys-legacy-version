@@ -6,6 +6,7 @@ local jumpDebounce = debounce.new(config.JumpDebounceTime, true)
 local jump = {}
 jump.CanJump = config.CanJump
 
+jump.CanHoldJump = false
 jump.JumpPower = if config.JumpPower == "HUMANOID" then nil else config.JumpPower :: number?
 jump.MaxJumps = config.MaxJumps
 jump.JumpCount = 0
@@ -66,7 +67,7 @@ end
 function jump.ableToJump(): boolean
 	local req, count = jump._requested, jump.JumpCount
 	jump._requested = false
-	return (if count > 0 then req else true)
+	return if jump.CanHoldJump then (count == 0 or req) else req
 		and count < jump.MaxJumps
 		and jumpDebounce:IsReady()
 		and jump.CanJump

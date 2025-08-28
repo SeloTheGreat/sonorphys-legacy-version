@@ -24,9 +24,12 @@ local types = require("../types")
 	return cropped
 end
 
---[[local function projectV3onAxis(vec: Vector3, axis: Vector3): Vector3
-	return (vec - vec:Dot(axis) * axis).Unit --subtract vec and projection
-end]]
+@native local function alignWithAxis(moveVector: Vector3, normal: Vector3, edgecase: Vector3): Vector3
+	local divpi, upAngle = math.pi/2, math.acos(normal.Y)
+	return if upAngle - 0.1 <= divpi and upAngle + 0.1 >= divpi then edgecase
+		elseif upAngle > divpi then Vector3.new(moveVector.X, -moveVector.Y, -moveVector.Z)
+		else moveVector
+end
 
 local physics = {}
 physics.MoveDirOverride = nil :: Vector3?
@@ -60,16 +63,16 @@ physics.FrictionTolerance = config.FrictionTolerance
 		physics.MoveDirOverride or humanoid.MoveDirection
 	)
 	
-	--Get facing direction
-	local facingDir = (moving ~= Vector3.zero)
-		and ((isGrounded and not physics.UseMovingDirForFacing) and root.AssemblyLinearVelocity.Unit or moving)
-		or root.CFrame.LookVector
-	
 	--Get up direction
 	local upDir = if isGrounded and not physics.UpDirIsAligned
 		then manager.UpDirection:Lerp(hitNormal, dt * physics.UpDirLerpFactor)
 		else Vector3.yAxis
-
+	
+	--Get facing direction
+	local facingDir = (moving ~= Vector3.zero)
+		and (isGrounded and alignWithAxis(moving, upDir, root.CFrame.LookVector) or moving) --((isGrounded and not physics.UseMovingDirForFacing) and root.AssemblyLinearVelocity.Unit or moving)
+		or root.CFrame.LookVector
+	
 	--Lowers friction if the player is not fast enough for a slope
 	local friction = 2
 	
