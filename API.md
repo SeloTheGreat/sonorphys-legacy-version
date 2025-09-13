@@ -391,6 +391,7 @@ jumpAction.JumpCount: number
 ```luau
 jumpAction._requested: boolean
 ```
+*internal*
 
 ### Functions
 
@@ -422,28 +423,151 @@ Returns whether the character is able to jump
 ### Properties
 
 ```luau
-a
+physics.MoveDirOverride: Vector3?
+```
+*internal*
+
+```luau
+physics.MaxAngle: number
+```
+
+```luau
+more
 ```
 
 ### Functions
 
 ```luau
-a
+physics.step(dt: number, manager: ControllerManager, humanoid: Humanoid): (Vector3, Vector3, Vector3, number)
 ```
+*internal ignore*
 
 ## speedometer
 
 ### Properties
 
 ```luau
-a
+--normalized number
+speedometer.MaxSpeed: number
 ```
+The maximum speed the character can accelerate to; note that this value isn't a strict constraint, and speed can overshoot this value but it will *progressively* return to max speed.<br>
+This a normalized value with a default of `1`
+
+```luau
+--normalized number
+speedometer.MinSpeed: number
+```
+The minimum speed of the character, this a strict minimum and the users speed cant go below this value.<br>
+This is a normalized value with a default of `0`
+
+```luau
+--normalized number
+speedometer.MinMovingSpeed: number
+```
+The minimum speed the character can go while moving, this is a strict minimum.<br>
+This is a normalized value with a default of [`normalize(config.MinimumMovingSpeed)`](API.md#config-documentation)
+
+```luau
+--normalized numbers
+speedometer.SpeedRanges: {
+	[1]: {"Idle", number = 0?},
+	[number]: {string, number}?,
+	[#speedometer.SpeedRanges]: {"Max", number = inf?}
+}
+```
+An ordered (as x < y) list of tables with each element consisting of the name of the range `[1]: string`, and the max value of the range `[2]: number`.<br>
+The constant "Idle" and "Max" ranges can be modified and removed through [configuration](API.md#config-documentation)
+
+```luau
+--normalized number
+speedometer.AccelerationRate: number
+```
+Acceleration rate, preset through [configuration](API.md#config-documentation)
+
+```luau
+--normalized number
+speedometer.DecelerationRate: number
+```
+
+```luau
+speedometer.CanAccelAirborne: boolean
+```
+Decides whether or not the character can accelerate in the air
+
+```luau
+--normalized number
+speedometer.AirborneAccelFactor: number
+```
+The acceleration factor when the player accelerates in the air
+
+```luau
+--normalized number
+speedometer.AccelUpAngleTolerance: number
+```
+Decides when the acceleration starts being affected by the angle of the surface the character is standing on.<br>
+Within [configuration](API.md#config-documentation) if the value is "COPY", `config.Movement.FrictionTolerance` is used
+
+```luau
+speedometer.State: types.SpeedStateEnum
+```
+Represents the current [SpeedState](API.md#speedstateenum)
+
+```luau
+--normalized number
+speedometer.Speed
+```
+The current speed value the speedometer holds
+
+```luau
+speedometer.SpeedOverride: PriorityGroup<number?>
+```
+A [PriorityGroup](API.md#prioritygroup) that can override the speed value
+
+```luau
+speedometer.MoveDirOverride: PriorityGroup<Vector3?>
+```
+A [PriorityGroup](API.md#prioritygroup) that can override the moving direction of the controller manager
+
+```luau
+speedometer.SustainedSpeed: NumberGroup --default: 0
+```
+A [NumberGroup](API.md#numbergroup) that the sum of gets adds to the final acceleration speed
 
 ### Functions
 
 ```luau
-a
+speedometer.step(dt: number, manager: ControllerManager): (number, Vector3?)
 ```
+*internal ignore*<br>
+Returns a number to set MoveSpeedFactor on controllers to<br>
+Only mutates the properties "Speed" and "State"<br>
+Changes acceleration based on UpDirection
+
+```luau
+speedometer.getMach(normalized_speed: number?): string
+```
+Uses the `speedometer.SpeedRanges` property to get the mach according to the `normalized_speed`
+
+```luau
+speedometer.setMach(name: string, value: number?): ()
+```
+`value` must either be a normalized number or nil;
+if nil, the mach state with the given name is deleted
+
+```luau
+speedometer.normalize(speed: number): number
+```
+Normalizes given number based on max and min speed
+
+```luau
+speedometer.setSpeedStateEnabled(speedState: types.SpeedStateEnum, enabled: boolean)
+```
+Disables or enables a given [SpeedState](API.md#speedstateenum)
+
+```luau
+speedometer.resetSkid_()
+```
+???
 
 # Server
 
@@ -479,6 +603,28 @@ type FunctionGroup<T...> = {
 	get: (self: @self, index: any) -> (((T...) -> ())?),
 	remove: (self: @self, index: any) -> (((T...) -> ())?),
 	clear: (self: @self) -> ()
+}
+```
+
+## PriorityGroup
+```luau
+type PriorityGroup<T = any> = {
+	result: (self: PriorityGroup<T>) -> (T, number),
+	add: (self: PriorityGroup<T>, value: T, priority: number|"default") -> (),
+	get: (self: PriorityGroup<T>, priority: number|"default") -> (T?),
+	remove: (self: PriorityGroup<T>, priority: number) -> (T?),
+	clear: (self: PriorityGroup<T>) -> ()
+}
+```
+
+## NumberGroup
+```luau
+type NumberGroup = {
+	sum: (self: NumberGroup) -> (number),
+	add: (self: NumberGroup, value: number, id: any?|"origin") -> (any),
+	get: (self: NumberGroup, id: any|"origin") -> (number?),
+	remove: (self: NumberGroup, id: any) -> (number?),
+	clear: (self: NumberGroup) -> ()
 }
 ```
 
