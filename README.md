@@ -9,4 +9,5 @@ The package should be placed in `ReplicatedStorage`, no further setup is necessa
 I'd write some important stuff here but this library kind of sucks, a new version is going to be worked on...
 
 > [API](API.md)</br>
-> [Pre-built RBXM file](build/SONORphys.rbxm)
+> [Pre-built RBXM file](build/SONORphys.rbxm)</br>
+> [Example Game (Uncopylocked)](https://www.roblox.com/games/125620003065151/Movement-Tech)
