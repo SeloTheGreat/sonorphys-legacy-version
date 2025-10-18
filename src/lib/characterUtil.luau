@@ -16,18 +16,6 @@ local function waitForChildOfClass(parent: Instance, childClass: string): Instan
 	return coroutine.yield()
 end
 
-local function waitForChanged(inst: Instance, property: string): any
-	local running = coroutine.running()
-	local conn
-	conn = inst.Changed:Connect(function(prop)
-		if prop == property and inst[prop] ~= nil then
-			conn:Disconnect()
-			task.spawn(running, inst[prop])
-		end
-	end)
-	return coroutine.yield()
-end
-
 local playerUtil = {}
 
 --May yield
@@ -39,7 +27,7 @@ function playerUtil.sustained(player: Player?): ({char: Model, hum: Humanoid, ro
 	
 	local function onCharacterAdded(character)
 		local humanoid = waitForChildOfClass(character, "Humanoid")
-		t.char, t.hum, t.root = character, humanoid, (humanoid.RootPart or waitForChanged(humanoid, "RootPart"))
+		t.char, t.hum, t.root = character, humanoid, character:WaitForChild("HumanoidRootPart")
 	end
 	
 	if player.Character then
@@ -59,7 +47,7 @@ function playerUtil.getComponents(player: Player?): (Model, Humanoid, BasePart)
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = waitForChildOfClass(character, "Humanoid")
 	
-	return character, humanoid, (humanoid.RootPart or waitForChanged(humanoid, "RootPart"))
+	return character, humanoid, character:WaitForChild("HumanoidRootPart")
 end
 
 --May yield
@@ -67,7 +55,7 @@ end
 function playerUtil.getComponentsFromCharacter(character: Model): (Humanoid, BasePart, Player)
 	local player = Players:GetPlayerFromCharacter(character)
 	local humanoid = waitForChildOfClass(character, "Humanoid")
-	local rootPart = humanoid.RootPart or waitForChanged(humanoid, "RootPart")
+	local rootPart = character:WaitForChild("HumanoidRootPart")
 
 	return humanoid, rootPart, player
 end
