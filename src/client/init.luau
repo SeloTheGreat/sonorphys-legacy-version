@@ -125,12 +125,18 @@ function controller.init(): typeof(controller)
 	return controller
 end
 
---Unhooks the controller connections
+--Unhooks the controller
 function controller.uninit()
 	if controller.config.BoundEvent == "BoundRenderStepped" then
 		RunService:UnbindFromRenderStep(RENDERSTEP_NAME)
 	end
 	unhook(controller._hooks)
+
+	controller.isLoaded = false
+
+	sensor.setParamsToDefault()
+	controller.character, controller.humanoid, controller.root, controller.manager =
+		nil, nil, nil, nil
 end
 
 --Ran every RenderStepped
